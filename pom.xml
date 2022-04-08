@@ -2,44 +2,63 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+    
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.4</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.4</version>
+    </parent>
+
 	<groupId>com.example</groupId>
 	<artifactId>spring-cloud-azure-starter-keyvault-secrets-sample-single-property-source</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>azkvtest</name>
 
-	<description>Demo project for Spring Cloud for Azure integration with Azure key Vault</description>
+	<description>Demo project of Spring Cloud for Azure integration with Azure key Vault</description>
 	<properties>
-		<java.version>11</java.version>
+        <java.version>11</java.version>
+        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 		<spring-cloud.version>2021.0.1</spring-cloud.version>
 		<spring-cloud-azure.version>4.0.0</spring-cloud-azure.version>
 	</properties>
+
 	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-dependencies</artifactId>
+			<version>${spring-cloud.version}</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.azure.spring</groupId>
+			<artifactId>spring-cloud-azure-dependencies</artifactId>
+			<version>${spring-cloud-azure.version}</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>com.azure.spring</groupId>
 			<artifactId>spring-cloud-azure-starter-keyvault-secrets</artifactId>
 		</dependency>	
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-config</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
 		</dependency>
 
 		<dependency>
@@ -48,6 +67,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

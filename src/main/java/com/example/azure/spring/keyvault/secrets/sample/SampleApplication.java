@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SampleApplication implements CommandLineRunner {
 
-    @Value("${MYSQL-SERVER-FULL-NAME}")
+    @Value("${FOO}") // ${MYSQL-SERVER-FULL-NAME}"
     private String springDataSourceUrl;
 
     public static void main(String[] args) {
