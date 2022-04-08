@@ -9,3 +9,6 @@
         secret:
           property-source-enabled: true
           endpoint: ${ENDPOINT}
+
+FOO: toto
+MYSQL-SERVER-FULL-NAME: fake DB

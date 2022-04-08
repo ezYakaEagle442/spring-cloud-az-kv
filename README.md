@@ -4,5 +4,5 @@ Read [https://github.com/Azure-Samples/azure-spring-boot-samples/tree/spring-clo
 
 mvn clean package -DskipTests
 
-java -jar .\target\spring-cloud-azure-starter-keyvault-secrets-sample-single-property-source-1.0.0.jar -Dspring.profiles.active=foo
-java -jar .\target\spring-cloud-azure-starter-keyvault-secrets-sample-single-property-source-1.0.0.jar --spring.profiles.active=foo
+java -jar .\target\spring-cloud-azure-starter-keyvault-secrets-sample-single-property-source-1.0.0.jar --spring.profiles.active=az
+
