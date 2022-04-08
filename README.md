@@ -6,3 +6,4 @@ mvn clean package -DskipTests
 
 java -jar .\target\spring-cloud-azure-starter-keyvault-secrets-sample-single-property-source-1.0.0.jar --spring.profiles.active=az
 
+java -jar .\target\spring-cloud-azure-starter-keyvault-secrets-sample-single-property-source-1.0.0.jar --spring.profiles.active=az --spring.cloud.azure.profile.keyvault.secret.endpoint=https://kv-XXX.vault.azure.net --spring.cloud.azure.profile.tenant-id=XXX --spring.cloud.azure.profile.credential.client-id=XXXX --spring.cloud.azure.profile.credential.client-secret=XXXX"
