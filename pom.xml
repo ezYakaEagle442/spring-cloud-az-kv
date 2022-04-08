@@ -27,7 +27,6 @@
 
 	<dependencies>
 
-		<!-- 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-dependencies</artifactId>
@@ -35,7 +34,6 @@
 			<type>pom</type>
 			<scope>import</scope>
 		</dependency>
-		-->
 
 		<dependency>
 			<groupId>com.azure.spring</groupId>
@@ -57,14 +55,14 @@
 		</dependency>
 		-->
 
-		<!-- https://search.maven.org/artifact/com.azure.spring/spring-cloud-azure-autoconfigure/4.0.0/jar -->
+		<!-- https://search.maven.org/artifact/com.azure.spring/spring-cloud-azure-autoconfigure/4.0.0/jar 
 		<dependency>
 			<groupId>com.azure.spring</groupId>
 			<artifactId>spring-cloud-azure-autoconfigure</artifactId>
 			<version>${spring-cloud-azure.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-		
+		-->
 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
