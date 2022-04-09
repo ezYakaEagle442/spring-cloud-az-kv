@@ -1,9 +1,27 @@
 # spring-cloud-az-kv
 
-Read [https://github.com/Azure-Samples/azure-spring-boot-samples/tree/spring-cloud-azure_4.0.0-beta.2/keyvault/spring-cloud-azure-starter-keyvault-secrets/single-property-source](https://github.com/Azure-Samples/azure-spring-boot-samples/tree/spring-cloud-azure_4.0.0-beta.2/keyvault/spring-cloud-azure-starter-keyvault-secrets/single-property-source)
+Read [Spring Cloud Azure KV Secret Sample](https://github.com/Azure-Samples/azure-spring-boot-samples/tree/spring-cloud-azure_v4.0.0/keyvault/spring-cloud-azure-starter-keyvault-secrets/property-source)
 
+0. prepare the KV
+
+you need to create a KV in Azure and set the following secrets:
+
+* FOO
+* MYSQL-SERVER-FULL-NAME
+
+
+1. az login with Azure CLI
+
+So you don't need to have any credential in your application properties
+
+```
+az login
+```
+
+then build and run your spring boot application
+
+```shell
 mvn clean package -DskipTests
+java -jar target/spring-cloud-azure-starter-keyvault-secrets-sample-single-property-source-1.0.0.jar --spring.profiles.active=azure "--spring.cloud.azure.keyvault.secret.property-sources[0].endpoint=YOUR_KEY_VAULT_ENDPOINT"
+```
 
-java -jar .\target\spring-cloud-azure-starter-keyvault-secrets-sample-single-property-source-1.0.0.jar --spring.profiles.active=az
-
-java -jar .\target\spring-cloud-azure-starter-keyvault-secrets-sample-single-property-source-1.0.0.jar --spring.profiles.active=az --spring.cloud.azure.profile.keyvault.secret.endpoint=https://kv-XXX.vault.azure.net --spring.cloud.azure.profile.tenant-id=XXX --spring.cloud.azure.profile.credential.client-id=XXXX --spring.cloud.azure.profile.credential.client-secret=XXXX"

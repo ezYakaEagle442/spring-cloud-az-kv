@@ -4,9 +4,4 @@ spring:
       keyvault:
         secret:
           property-sources:
-            - credential:
-                client-id: ${AZURE_CLIENT_ID}
-                client-secret: ${AZURE_CLIENT_SECRET}
-              endpoint: ${ENDPOINT}
-              profile:
-                tenant-id: ${AZURE_TENANT_ID}
+              - endpoint: ${AZURE_KV_ENDPOINT}
