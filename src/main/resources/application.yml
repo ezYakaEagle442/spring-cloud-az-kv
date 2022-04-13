@@ -13,14 +13,14 @@ spring:
 
   config:
     activate:
-      on-profile: mysql
+      on-profile: default
   datasource:
     schema: classpath*:db/mysql/schema.sql
     data: classpath*:db/mysql/data.sql
     # url: jdbc:mysql://${MYSQL_SERVER_FULL_NAME}:3306/${MYSQL_DATABASE_NAME}?useSSL=true&requireSSL=true&enabledTLSProtocols=TLSv1.2&verifyServerCertificate=true
-    url: totoTemplate # jdbc:mysql://${MYSQL-SERVER-FULL-NAME}:3306/${MYSQL-DATABASE-NAME}?useSSL=true&requireSSL=true&enabledTLSProtocols=TLSv1.2&verifyServerCertificate=true    
+    url: jdbc:mysql://${MYSQL-SERVER-FULL-NAME}:3306/${MYSQL-DATABASE-NAME}?useSSL=true&requireSSL=true&enabledTLSProtocols=TLSv1.2&verifyServerCertificate=true    
     username: ${MYSQL-SERVER-ADMIN-LOGIN-NAME} # ${MYSQL_SERVER_ADMIN_LOGIN_NAME}
     password: ${MYSQL-SERVER-ADMIN-PASSWORD} # ${MYSQL_SERVER_ADMIN_PASSWORD}
     initialization-mode: NEVER # ALWAYS
 
-titi: tutu template
+titi: tutu default template
