@@ -31,6 +31,20 @@ public class SampleApplication implements CommandLineRunner {
     @Value("${titi}")
     private String titi;
 
+    /*
+    @Value("${spring.cloud.azure.keyvault.secret.property-sources[].endpoint}")
+    private String kvEndpoint;
+
+    @Value("${spring.cloud.azure.keyvault.secret.property-sources[].credential.client-id}")
+    private String kvClientId;
+
+    @Value("${spring.cloud.azure.keyvault.secret.property-sources[].credential.client-secret}")
+    private String kvClientSecret;
+
+    @Value("${spring.cloud.azure.keyvault.secret.property-sources[].profile.tenant-id}")
+    private String kvTenantId;
+    */
+
     @Autowired
     private YAMLConfig myConfig;
 
@@ -39,7 +53,13 @@ public class SampleApplication implements CommandLineRunner {
     }
 
     public void run(String[] args) {
-        // System.out.println("FOO Fake Property in application-az.yml : " + fooFakeProp);
+        /*
+        System.out.println("Azure Key Vault kvEndpoint: " + kvEndpoint);
+        System.out.println("Azure Key Vault kvTenantId: " + kvTenantId);
+        System.out.println("Azure Key Vault kvClientId: " + kvClientId);
+        System.out.println("Azure Key Vault kvClientSecret: " + kvClientSecret);
+        */
+
         System.out.println("Secret MYSQL-SERVER-FULL-NAME in Azure Key Vault: " + MYSQL_SERVER_FULL_NAME);
         System.out.println("JDBC URL from config file: " + url);
         System.out.println("Spring log level from config file: " + logLevelSpring);
