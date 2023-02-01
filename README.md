@@ -93,7 +93,7 @@ RG_APP=rg-iac-aks-petclinic-mic-srv # RG where to deploy the other Azure service
 
 ```sh
 #docker build --build-arg --no-cache -t "test-v0.1" -f "./Dockerfile" .
-tag_id=$(docker build -t "test-v0.2" . 2>/dev/null | awk '/Successfully built/{print $NF}')
+tag_id=$(docker build --build-arg --no-cache -t "test-v0.0.1" . 2>/dev/null | awk '/Successfully built/{print $NF}')
 #docker tag "test-v0.1"  $REGISTRY_URL/petclinic/test-service
 
 ```
