@@ -1,4 +1,5 @@
 prv/*
+k8s/deploy/*
 deploy/*
 cnf/*
 
