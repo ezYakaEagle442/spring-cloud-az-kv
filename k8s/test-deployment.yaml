@@ -60,11 +60,11 @@ spec:
               configMapKeyRef:
                 name: springcloudazure
                 key: SPRING_CLOUD_AZURE_KEY_VAULT_ENDPOINT
-          - name: "TEST_APP_IDENTITY_CLIENT_ID"
+          - name: "TEST_SVC_APP_IDENTITY_CLIENT_ID"
             valueFrom:
               configMapKeyRef:
                 name: springcloudazure
-                key: TEST_APP_IDENTITY_CLIENT_ID
+                key: TEST_SVC_APP_IDENTITY_CLIENT_ID
           - name: "SPRING_PROFILES_ACTIVE"
             value: docker,mysql,azure,test,mi
           startupProbe:
