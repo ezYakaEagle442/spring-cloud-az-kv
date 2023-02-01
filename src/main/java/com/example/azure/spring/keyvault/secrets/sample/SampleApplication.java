@@ -25,8 +25,8 @@ public class SampleApplication implements CommandLineRunner {
     @Value("${logging.level.org.springframework}")
     private String logLevelSpring;
 
-    @Value("${MYSQL-SERVER-FULL-NAME}")
-    private String MYSQL_SERVER_FULL_NAME;
+    @Value("${SPRING-DATASOURCE-PASSWORD}")
+    private String SPRING_DATASOURCE_PASSWORD;
 
     @Value("${titi}")
     private String titi;
@@ -60,12 +60,12 @@ public class SampleApplication implements CommandLineRunner {
         System.out.println("Azure Key Vault kvClientSecret: " + kvClientSecret);
         */
 
-        System.out.println("Secret MYSQL-SERVER-FULL-NAME in Azure Key Vault: " + MYSQL_SERVER_FULL_NAME);
+        System.out.println("Secret SPRING_DATASOURCE_PASSWORD in Azure Key Vault: " + SPRING_DATASOURCE_PASSWORD);
         System.out.println("JDBC URL from config file: " + url);
         System.out.println("Spring log level from config file: " + logLevelSpring);
 
         System.out.println("Titi:" + myConfig.getTiti());
-        System.out.println("Titi Val:" + titi);
+        System.out.println("Titi Value:" + titi);
 
     }
 
