@@ -225,6 +225,7 @@ envsubst < ./k8s/test-deployment.yaml > ./k8s/deploy/test-deployment.yaml
 envsubst < ./k8s/svc-cluster-ip.yaml > ./k8s/deploy/svc-cluster-ip.yaml 
 
 kubectl apply -f ./k8s/deploy/test-deployment.yaml -n ${TARGET_NAMESPACE}
+kubectl apply -f ./k8s/deploy/svc-cluster-ip.yaml -n ${TARGET_NAMESPACE}
 ```
 
 ## Test from the Pod
@@ -238,6 +239,7 @@ do
     kubectl logs $pod -c test-service -n ${TARGET_NAMESPACE} | grep -i "Error"
     # kubectl exec -it $pod -c test-service -n ${TARGET_NAMESPACE}  -- ls -al /mnt/secrets-store
     kubectl exec -it $pod -c test-service -n ${TARGET_NAMESPACE}  -- cat /mnt/secrets-store/dbpassword
+    kubectl exec -it $pod -c test-service -n ${TARGET_NAMESPACE}  -- curl http://test-service:8081/manage/env
     echo ""
     echo ""
 done
