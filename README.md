@@ -55,10 +55,6 @@ java -jar .\target\spring-cloud-azure-starter-keyvault-secrets-sample-single-pro
 
 # Test using Managed Identity
 
-
-
-
-
 ## Set ENV
 
 ```sh
@@ -75,7 +71,7 @@ AKS_CLUSTER_NAME=aks-petcliaks
 TARGET_NAMESPACE=petclinic
 
 ACR_NAME=acrpetcliaks
-REGISTRY_URL=acrpetcliaca.azurecr.io  # set this to the URL of your registry
+REGISTRY_URL=acrpetcliaks.azurecr.io  # set this to the URL of your registry
 REPOSITORY=petclinic   
 
 SPRING_CLOUD_AZURE_KEY_VAULT_ENDPOINT=https://kv-petcliaks33.vault.azure.net/
@@ -94,19 +90,24 @@ RG_APP=rg-iac-aks-petclinic-mic-srv # RG where to deploy the other Azure service
 ```sh
 #docker build --build-arg --no-cache -t "test-v0.1" -f "./Dockerfile" .
 tag_id=$(docker build --build-arg --no-cache -t "test-v0.0.1" . 2>/dev/null | awk '/Successfully built/{print $NF}')
-#docker tag "test-v0.1"  $REGISTRY_URL/petclinic/test-service
-
+docker tag "test-v0.0.1" $REGISTRY_URL/petclinic/test-service:$tag_id
 ```
 
 ## Push to ACR
 ```sh
+
+# az acr show --name $ACR_NAME -g $RG_APP
+# az acr update --name $REGISTRY_URL --admin-enabled true
+# az acr login --name $REGISTRY_URL -u admin -p xxx
+
 set -euo pipefail
 access_token=$(az account get-access-token --query accessToken -o tsv)
-refresh_token=$(curl https://$REGISTRY_URL /oauth2/exchange -v -d "grant_type=access_token&service=$REGISTRY_URL &access_token=$access_token" | jq -r .refresh_token)
-docker login $REGISTRY_URL  -u 00000000-0000-0000-0000-000000000000 --password-stdin <<< "$refresh_token"
+refresh_token=$(curl --silent -k https://$REGISTRY_URL/oauth2/exchange -v -d "grant_type=access_token&service=$REGISTRY_URL&access_token=$access_token" | jq -r .refresh_token)
+docker login $REGISTRY_URL -u 00000000-0000-0000-0000-000000000000 --password-stdin <<< "$refresh_token"
 
-docker push $REGISTRY_URL/petclinic/test-service
-docker pull $REGISTRY_URL/petclinic/test-service
+docker push $REGISTRY_URL/petclinic/test-service:latest
+docker push $REGISTRY_URL/petclinic/test-service:$tag_id
+# docker pull $REGISTRY_URL/petclinic/test-service
 ```
 
 ## Create Identities
@@ -129,8 +130,6 @@ KEY_VAULT_READER="/subscriptions/$SUBSCRIPTION_ID/providers/Microsoft.Authorizat
 KEY_VAULT_SECRET_USER="/subscriptions/$SUBSCRIPTION_ID/providers/Microsoft.Authorization/roleDefinitions/4633458b-17de-408a-b874-0445c86b69e6"
 
 az role assignment create --assignee $testServiceClientId --scope /subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_KV} --role $KEY_VAULT_SECRET_USER
-
-
 ```
 
 ## Kube-login
@@ -139,7 +138,6 @@ az role assignment create --assignee $testServiceClientId --scope /subscriptions
 az aks get-credentials --name ${AKS_CLUSTER_NAME} -g ${RG_APP}
 #managed_rg=$(az aks show --resource-group $RG_APP --name ${{ env.AKS_CLUSTER_NAME }} --query nodeResourceGroup -o tsv)
 #echo "CLUSTER_RESOURCE_GROUP:" $managed_rg
-
 ```
 
 
@@ -166,6 +164,7 @@ echo "AKS_OIDC_ISSUER:" $AKS_OIDC_ISSUER
 echo ""
 
 
+mkdir ./k8s/deploy
 ls -al ./k8s
 envsubst < ./k8s/sa.yaml > ./k8s/deploy/sa-test.yaml
 echo "Cheking folder " ./k8s/deploy
@@ -182,7 +181,6 @@ az identity federated-credential create --name customersServiceFedIdentity --ide
 ## Create ConfigMap
 
 ```sh
-mkdir ./k8s/deploy
 echo "Cheking folder " .
 ls -al ./k8s
 
@@ -202,27 +200,31 @@ cat ./k8s/deploy/cm-test.yaml
 kubectl apply -f ./k8s/deploy/cm-test.yaml -n ${TARGET_NAMESPACE}
 ```
 
-
-
 ## Deploy to AKS 
 
 ```sh
 export SECRET_PROVIDER_CLASS_NAME=${SECRET_PROVIDER_TEST}
 echo "SECRET_PROVIDER_CLASS_NAME " $SECRET_PROVIDER_CLASS_NAME
 
-export USER_ASSIGNED_CLIENT_ID=$customersServiceClientId
+export IDENTITY_TENANT=${SPRING_CLOUD_AZURE_TENANT_ID}
+
+export USER_ASSIGNED_CLIENT_ID=$testServiceClientId
 envsubst < ./k8s/secret-provider-class.yaml > ./k8s/deploy/secret-provider-class.yaml 
+
 
 echo "Cheking folder " .
 ls -al ./k8s/deploy
 cat ./k8s/deploy/secret-provider-class.yaml 
 kubectl apply -f ./k8s/deploy/secret-provider-class.yaml -n ${TARGET_NAMESPACE}
+kubectl get SecretProviderClass -n ${TARGET_NAMESPACE}
+
+export REPO=${REPOSITORY}
+export CONTAINER_REGISTRY=${ACR_NAME}
 
 envsubst < ./k8s/test-deployment.yaml > ./k8s/deploy/test-deployment.yaml
 envsubst < ./k8s/svc-cluster-ip.yaml > ./k8s/deploy/svc-cluster-ip.yaml 
 
-kubectl apply -f test-deployment.yaml -n ${TARGET_NAMESPACE}
-kubectl get SecretProviderClass -n ${TARGET_NAMESPACE}
+kubectl apply -f ./k8s/deploy/test-deployment.yaml -n ${TARGET_NAMESPACE}
 ```
 
 ## Test from the Pod
@@ -231,9 +233,13 @@ kubectl get SecretProviderClass -n ${TARGET_NAMESPACE}
 
 for pod in $(kubectl get po -n ${TARGET_NAMESPACE} -l app=test-service -o custom-columns=:metadata.name)
 do
-    kubectl logs $pod -n ${TARGET_NAMESPACE} | grep -i "Error"
-    kubectl exec -it $pod -c test-service -n ${TARGET_NAMESPACE}  -- ls -al /mnt/secrets-store
-    kubectl exec -it $pod -c test-service -n ${TARGET_NAMESPACE}  -- cat -al /mnt/secrets-store/dbpassword
+    echo checking Pod $pod
+    # kubectl describe po $pod -n ${TARGET_NAMESPACE}
+    kubectl logs $pod -c test-service -n ${TARGET_NAMESPACE} | grep -i "Error"
+    # kubectl exec -it $pod -c test-service -n ${TARGET_NAMESPACE}  -- ls -al /mnt/secrets-store
+    kubectl exec -it $pod -c test-service -n ${TARGET_NAMESPACE}  -- cat /mnt/secrets-store/dbpassword
+    echo ""
+    echo ""
 done
 
 ```
